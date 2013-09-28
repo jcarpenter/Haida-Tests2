@@ -1,6 +1,4 @@
-Haida Tests2
+H A I D A 
 --------------
 
-### Sept 27
-
-A magical directory full of adventure and daring do.
+A collection of Firefox OS Haida prototypes. Learn more about Haida on the [MozillaWiki](https://wiki.mozilla.org/FirefoxOS/Haida).
