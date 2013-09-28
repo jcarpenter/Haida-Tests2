@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+        <title>HAIDA Prototype</title>
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="css/global.css" />
+    </head>
+    <body>
+
+        <div id="screen">
+            <div id="status-bar"></div>
+            <div id="home-swipe"></div>           
+            <div id="rocketbar-swipe"></div>
+            <div id="settingsdrawer-swipe"></div>
+
+            <!-- <div id="sheets">HAIDA Prototype</div> -->
+        </div>
+
+
+        <!-- TEMPLATES -->
+
+         <script id="sheet" type="text/x-handlebars-template">
+            <div class="sheet">SHEEEET</div>
+        </script>
+
+        <script id="appIcon" type="text/x-handlebars-template">
+            <div class="homeIcon">
+                <img src="images/icon_{{id}}.png" />
+                <div>{{name}}</div>
+            </div>
+        </script>
+
+
+
+        <!-- OLD SCRIPTS
+        <script type="text/javascript" charset="utf-8" src="js/handlebars.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/preloaded.json"></script>
+        <script type="text/javascript" charset="utf-8" src="js/statusbar.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/variables.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/startup.js"></script>
+        -->
+    </body>
+</html>
