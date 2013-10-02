@@ -1,35 +1,72 @@
-HAIDA PROTOTYPE DEVELOPMENT NOTES
+HAIDA PROTOTYPE NOTES
 =================================================
 
 GitHub: [Haida-Tests2](https://github.com/jcarpenter/Haida-Tests2)  
 Last update: Sept 28
 
 
-Architecture
+Design Patterns
 ------------------------------------------------
 
 
 ### High-level ###
 
-* Use revealing module pattern.
-* All code lives within anonymous closures, which provides privacy and state throughout the lifetime of the app.
-* Use strict mode
+App will be structured as follows:
 
-Draft module structure:
+* Revealing module pattern
+* Strict mode
+* PubSub
+* Automated nested namespacing via dedicated function
+* CSS3 animations
+* Handlebars.js for templating?
 
-* Gaia
-    * Sheet
-    * AppIcon
-    * HistoryManager
-    * TransitionManager
-    * WindowManager
+Am also considering:
+
+* Subdivide namespace, one division per file. Must be declared in order, eg: spa -> spa.wb -> spa.wb.render. The JS filename matches the namespace.
+* Use parallel namespaces for CSS files and classes. For example, all classes from elements that belong to a object constructed from Screen() should start with "screen-".
+
+
+
+### PubSub ###
+
+To reinforce encapsulation, will have modules communcation with each other through event subscriptions instead of direct calls. 
+
+There are many libraries available for PubSub, from jQuery-based to vanilla JS. I will use PubSubz, from Addy Osmani (author of [Learning JacaScript Design Patterns](http://addyosmani.com/resources/essentialjsdesignpatterns/book/#observerpatternjavascript)). 
+
+Quotes on PubSub:
+
+    "Don't make modules explicitly depend on each other. Everything each module needs to work should be confined into either the module or plugins that are shared among modules." [Brian Cray](http://briancray.com/posts/javascript-module-pattern)
+
+    "Have modules communicate to each other through event subscriptions, not through direct calls to each other. They call this a pubsub. If you’re using jQuery, check out jQuery Tiny Pub/Sub." [Brian Cray](http://briancray.com/posts/javascript-module-pattern)
+
+Vanilla JS pubsub options:
+
+* Pubsubz: [GitHub](https://github.com/addyosmani/pubsubz)
+* PubSubJS: [Article](http://roderick.dk/2010/10/12/introducing-pubsubjs-a-library-for-doing-publish-subscribe-in-javascript//), [GitHub](https://github.com/mroderick/PubSubJS).
+* pubsub.js: [GitHub](https://github.com/phiggins42/bloody-jquery-plugins/tree/master)
+
+
+
+### Namespaces ###
+
+Namespaces can be extended via:
+
+* Object literal notation
+* Nested name spacing
+* IIFE
+* Namespace injection (a variation on IIFE, Immediately Invoked Functional Expression)
+
+For my project, will use "automated nested namespacing" per [page 226](http://addyosmani.com/resources/essentialjsdesignpatterns/book/#detailnamespacing) of Learning JavaScript Design Patterns, with a function setup to automatically define nested namespaces under the App global variable: App.createNS
+
 
 
 ### Module pattern ###
 
-The following is the revealing module pattern. Everything inside it is private, and we decide what to return (expose as public members) with the return. 
+Will use the revealing module pattern. Everything inside it is private, and we decide what to return (expose as public members) with the return. 
 
-Self contained scope: private variables and functions. Executes immediately. Example from [Maciej Baron](http://www.impressivewebs.com/my-current-javascript-design-pattern/#comment-32835):
+Module pattern uses IIEFs (Immediately Invoked Function Expressions). These are effectively unnamed functions which are invoked immediately after they are defined. In JavaScript, variables and functions defined within such a context are only accessible within it, so this approach provides privacy, encapsulating logic from the global namespace.
+
+Example from [Maciej Baron](http://www.impressivewebs.com/my-current-javascript-design-pattern/#comment-32835):
 
     (function ($, MyObject, undefined) {
       MyObject.publicFunction = function() {
@@ -56,14 +93,8 @@ Self contained scope: private variables and functions. Executes immediately. Exa
 
 `MyObject` is the namespace. Using an anonymous self-executing function enables private and public attributes.
 
-`window.MyObject = window.MyObject || {}` enables to check if the namespace already exists.
+`window.MyObject = window.MyObject || {}` enables to check if the namespace already exists. Will be using a slightly more powerful system that allows for easy creation of nested namespaces via a dedicated function (see Namespaces section, above).
 
-Some more notes:
-
-* Save references to HTML elements in your objects, do not use IDs
-* Subdivide namespace, one division per file. Must be declared in order, eg: spa -> spa.wb -> spa.wb.render
-* Name JS file per namespace provided.
-* Use parallel namespaces for CSS files and classes. For example, all classes from elements that belong to a object constructed from Screen() should start with "screen-".
 
 
 ### Prototypes ###
@@ -94,6 +125,8 @@ From Michael's slides, but I missed how this fits into the module pattern. There
 
 
 ### Variables ###
+
+Use underscores to denote private variables. eg: `_screen`
 
 Watch out for accidental global variables:
 
@@ -139,8 +172,10 @@ Don't change variable's type: "If your function returns a string, always return 
 
 ### References ###
 
+* [Example app for module pattern, Steve Kwan](https://github.com/stevekwan/experiments/blob/master/javascript/module-pattern.html)
 * [JavaScript Namespaces and Modules](http://www.kenneth-truyers.net/2013/04/27/javascript-namespaces-and-modules/)
 * [Single page apps in depth](http://singlepageappbook.com/single-page.html)
+* [Boilerplate FFOS app](https://github.com/robnyman/Firefox-OS-Boilerplate-App/blob/gh-pages/js/webapp.js)
 * [Architecture of a single-page JavaScript web application? (Stack Overflow)](http://stackoverflow.com/questions/3050869/architecture-of-a-single-page-javascript-web-application)
 * [Single Page Web Applications: JavaScript End-to-End (YouTube)](http://www.youtube.com/watch?v=OrIFaWJ9Glo) 
 * [JavaScript for SPAs, Michael Mikowski * Josh Powell (slide deck)](http://html5devconf.com/archives/october2012/slides/Michael-S-Mikowski-Tuesday-2012-10-16-js4spa.pdf)
@@ -243,37 +278,4 @@ Arrays
 
 
 
-
----
-
-
-OLD NOTES
-================================================
-
-
-Working w/ objects (per Tom, Sept 26)
-------------------------------------------------
-
-    window.class = function class(arg1, arg2) {
-        this.id = arg1;
-        this.arry = []
-    }
-    class.prototype.method1 = function(name) {
-        return this.arry.indexof()
-    }
-    var something = new window.class(1,2)
-
-And parsing arrays:
-
-    new instance[home,0,Home,,none,dsad]
-    var newArray = Array.filter(function(item, index, argumemt) {
-        return item.name == argument
-    })
-
-
-Create object instances
-------------------------------------------------
-
-    var email = new sheet("email","Email","0","symbol")
-    var music = new sheet("music","Music","0","symbol")
 

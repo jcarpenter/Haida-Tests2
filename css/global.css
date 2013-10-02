@@ -34,7 +34,7 @@ html {
   background-color: gray; }
 
 #status-bar {
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
   z-index: 10;
