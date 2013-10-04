@@ -134,3 +134,36 @@ App.HistoryManager = function(){
 }();
 
 App.HistoryManager.update_count();
+
+
+
+
+
+
+
+/*-------------------- Tests --------------------*/
+
+var idiot = document.getElementById("frame");
+
+
+function display(url){
+  console.log(url)
+  var xmlhttp;
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange=function(){
+    //console.log(xmlhttp.responseText)
+    if (xmlhttp.readyState==4 && xmlhttp.status==200){
+        console.log("los")
+        idiot.innerHTML=xmlhttp.responseText;
+      }
+    }
+  xmlhttp.open("GET",url,true);
+  xmlhttp.responseType = "document";
+  xmlhttp.send();
+}
+
+document.getElementById("frame").addEventListener("click", function(){
+  display("http://localhost:8888/haida1/home.html");
+});
+
+

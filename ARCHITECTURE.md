@@ -8,6 +8,8 @@ Open questions
 * Determine how best to load and wait for external JS files
 * Where are initial variables defined? Top of App namespace?
 * Where should JSON for pre-population live?
+* What is best way to import external pages, and their styles / JS?
+
 
 
 High-level requirements
@@ -38,7 +40,8 @@ Module structure
 * Subscribers
 * Publishers
 
-### Summary ###
+### Summary ### ###
+
 * PubSubz
 	* Imported from external file. Defines self inside IIFE as global namespace, "pubsubz".
 	* Topics:
@@ -54,7 +57,7 @@ Module structure
 	* Init
 		* Populate preloaded apps from JSON file
 * PubSub
-	* Functions as Topic Event Channel?
+	* Functions as Topic Event Channel. Is declared inside IIFE inside external pubsubz.js file. Provides all the functions necessary for pub/sub pattern.
 * App.Home
 	* Needs to be populated
 	* Needs to be accessed
@@ -156,7 +159,6 @@ We need to track...
 * Which apps are already open? Which sheets of those apps? What order?
 * Is RocketBar active?
 * Which chrome is needed? Which is active?
-
 
 
 
