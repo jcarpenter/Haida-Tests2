@@ -52,17 +52,16 @@ App.createNS = function (namespace) {
 (function(App, undefined){
 
 	//Declares & defines a private variable
-	var _haida_is = false;
+	//var _haida_is = false;
 
 	//Declares & defines a public method
 	App.init = function(){
-		console.log(_haida_is);
+
 	}
 
 }(App));
 
 //Calls init public function
-App.init();
 
 
 
@@ -105,18 +104,182 @@ pubsubz.publish( 'example1', 'hello again!' );
 /*-------------------- Managers --------------------*/
 
 
-App.createNS("WindowManager");
-App.createNS("HistoryManager");
+App.createNS("ScreenManager");
+
+App.ScreenManager = function(){
+
+  /*---- variables ---- */
+
+  var active_screen;
+  var topdrawer1_isopen;
+  var topdrawer2_isopen;
+
+  var bottom_swipe = document.getElementById('bottom-swipe');
+  var topleft_swipe = document.getElementById('topleft-swipe');
+  var topright_swipe = document.getElementById('topright-swipe');
+
+  var status_bar = document.getElementById('status-bar');
+  var rocketbar_drawer = document.getElementById('rocketbar-drawer');
+  var settings_drawer = document.getElementById('settings-drawer');
+  var keyboard = document.getElementById('keyboard');
 
 
-App.WindowManager = function(){
+  /*---- touch handlers ---- */
+
+  bottom_swipe.addEventListener("click", function() {
+    //console.log("swipe up");
+    if(topdrawer1_isopen){
+      pubsubz.publish('close_topdrawer1');
+    } else if (topdrawer2_isopen){
+      pubsubz.publish('close_topdrawer2');
+    } else {
+      pubsubz.publish('open_bottomdrawer');
+    }
+  });
+
+  topleft_swipe.addEventListener("click", function() {
+    //console.log("open rocketbar");
+    if(topdrawer1_isopen){
+      //
+    } else if (topdrawer2_isopen){
+      //
+    } else {
+      pubsubz.publish('open_topdrawer1');
+    }
+  });
+
+  topright_swipe.addEventListener("click", function() {
+    //console.log("open settings drawer")
+    if(topdrawer1_isopen){
+      //
+    } else if (topdrawer2_isopen){
+      //
+    } else {
+      pubsubz.publish('open_topdrawer2');
+    }
+  });
+
+
+  /*---- functions ---- */
+
+  var set_active_screen = function(target){
+    active_screen = target;
+    console.log("The active screen is now: " + active_screen)
+  }
+
+  var open_bottomdrawer = function(){
+    console.log("opened: home")
+    
+  }
+
+  var showKeyboard = function(){
+    $(keyboard).animo( { animation: "showKeyboard", duration: .2, timing: "ease-out", keep:"true"} )
+  }
+
+  var hideKeyboard = function(){
+    $(keyboard).animo( { animation: "hideKeyboard", duration: .2, timing: "ease-out", keep:"true"} )
+  }
+
+  var open_topdrawer1 = function(){
+    showKeyboard();
+    $(status_bar).animo( { animation: "openFullRocketBar", duration: .2, timing: "ease-out", keep:"true"} );
+    $(rocketbar_drawer).children("#cursor").animo( { animation: "blinking", duration: 1, timing: "ease-out", iterate: "infinite",} );
+    $(rocketbar_drawer).children("#background").animo( { animation: "darkenBG", duration: .3, timing: "ease-out", keep:"true"} );
+    rocketbar_drawer.classList.toggle("hidden");
+    topdrawer1_isopen = true;
+  }
+
+  var close_topdrawer1 = function(){
+    //console.log("closed: rocketbar")
+    hideKeyboard();
+    $(status_bar).animo( { animation: "closeFullRocketBar", duration: .2, timing: "ease-out"} );
+    $(rocketbar_drawer).animo( { animation: "fadeOut", duration: .2, timing: "ease-out", keep:"true"}, function(){
+      $(rocketbar_drawer).animo("cleanse");
+      $(rocketbar_drawer).children().animo("cleanse");
+      rocketbar_drawer.classList.toggle("hidden");
+      topdrawer1_isopen = false;
+    });
+  }
+
+  var open_topdrawer2 = function(){
+    $(settings_drawer).animo( { animation: "darkenBG", duration: .3, timing: "ease-out", keep:"true"} );
+    $(settings_drawer).children("img").animo( { animation: "slideInDown", duration: .3, timing: "ease-out", keep:"true"} );
+    settings_drawer.classList.toggle("hidden");
+    topdrawer2_isopen = true;
+  }
+
+  var close_topdrawer2 = function(){
+    $(settings_drawer).animo( { animation: "lightenBG", duration: .3, timing: "ease-out", keep:"true"} );
+    $(settings_drawer).children("img").animo( { animation: "slideOutUp", duration: .3, timing: "ease-out"}, function(){
+      $(settings_drawer).animo("cleanse");
+      $(settings_drawer).children("img").animo("cleanse");
+      settings_drawer.classList.toggle("hidden");
+      topdrawer2_isopen = false;
+    });
+  }
+
+  var init = function(){
+
+    rocketbar_drawer.classList.toggle("hidden");
+    settings_drawer.classList.toggle("hidden");
+    
+    //create home icons
+
+  }
+
+  /*---- subscribers ---- */
+
+  var init_sub = pubsubz.subscribe('init', init);
+  var bottomdrawer_sub = pubsubz.subscribe('open_bottomdrawer', open_bottomdrawer);
+  var open_topdrawer1_sub = pubsubz.subscribe('open_topdrawer1', open_topdrawer1);
+  var close_topdrawer1_sub = pubsubz.subscribe('close_topdrawer1', close_topdrawer1);
+  var open_topdrawer2_sub = pubsubz.subscribe('open_topdrawer2', open_topdrawer2);
+  var close_topdrawer2_sub = pubsubz.subscribe('close_topdrawer2', close_topdrawer2);
+
+  /*---- return ---- */
 
 	return {
 		
 	}
+
 }();
 
 
+
+App.createNS("Home");
+
+App.Home = function(){
+
+  /*---- variables & objects ---- */
+
+
+  /*---- functions ---- */
+
+  var init = function(){
+
+    $.getJSON("js/preloads.json", function(data){
+      
+      $.each(data.preloads, function(key, data){
+        console.log(data.name);
+
+        var source = $("#appIcon").html();
+        var template = Handlebars.compile(source);
+        var html = template(data)
+        $(home).append(html);
+
+      });
+    });
+  }
+
+  /*---- subscribers ---- */
+
+  var init_sub = pubsubz.subscribe('init', init);
+
+
+}();
+
+
+App.createNS("HistoryManager");
 
 App.HistoryManager = function(){
 	var _time_list = [];
@@ -143,8 +306,8 @@ App.HistoryManager.update_count();
 
 /*-------------------- Tests --------------------*/
 
-var idiot = document.getElementById("frame");
-
+/*
+var frame = document.getElementById("frame");
 
 function display(url){
   console.log(url)
@@ -166,4 +329,12 @@ document.getElementById("frame").addEventListener("click", function(){
   display("http://localhost:8888/haida1/home.html");
 });
 
+*/
 
+
+
+/*-------------------- Initiate --------------------*/
+
+//App.init();
+
+pubsubz.publish('init');

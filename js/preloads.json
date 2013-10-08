@@ -1,0 +1,200 @@
+{"preloads": 
+[
+	{
+		"name": "Dialer",
+		"id": "dialer",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},	
+	{
+		"name": "Messages",
+		"id": "messages",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "Music",
+		"id": "music",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "Marketplace",
+		"id": "marketplace",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+
+
+	{
+		"name": "Email",
+		"id": "email",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "Facebook",
+		"id": "facebook",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "Twitter",
+		"id": "twitter",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "Browser",
+		"id": "browser",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+
+
+	{
+		"name": "Contacts",
+		"id": "contacts"
+	},
+	{
+		"name": "Video",
+		"id": "video"
+	},
+	{
+		"name": "Camera",
+		"id": "camera"
+	},
+	{
+		"name": "Gallery",
+		"id": "gallery"
+	},
+
+
+	{
+		"name": "Calculator",
+		"id": "calculator",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "FM Radio",
+		"id": "fmradio",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "Clock",
+		"id": "clock",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "Settings",
+		"id": "settings",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+
+	
+	{
+		"name": "Compass",
+		"id": "compass",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "Cost Control",
+		"id": "costcontrol",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "Dialer",
+		"id": "dialer",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},	
+	{
+		"name": "Messages",
+		"id": "messages",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "Music",
+		"id": "music",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "Marketplace",
+		"id": "marketplace",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+
+
+	{
+		"name": "Email",
+		"id": "email",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "Facebook",
+		"id": "facebook",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "Twitter",
+		"id": "twitter",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+	{
+		"name": "Browser",
+		"id": "browser",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	},
+
+
+	{
+		"name": "Contacts",
+		"id": "contacts"
+	},
+	{
+		"name": "Video",
+		"id": "video"
+	},
+	{
+		"name": "Tetris",
+		"id": "tetris",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+	}
+]}
