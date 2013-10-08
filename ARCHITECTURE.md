@@ -6,6 +6,11 @@ Open questions
 
 * Determine how best to load and wait for external JS files
 * What is best way to import external pages, and their styles / JS?
+	* [Easy script loading with YepNope](http://net.tutsplus.com/tutorials/javascript-ajax/easy-script-loading-with-yepnope-js/)
+	* [StackOverflow thread](http://stackoverflow.com/questions/950087/how-to-include-a-javascript-file-in-another-javascript-file).
+	* [MDN: "Using XMLHttpRequest"](http://mdn.beonex.com/en/DOM/XMLHttpRequest/Using_XMLHttpRequest.html)
+	* [MDN: "HTML in XMLHttpRequest"](https://developer.mozilla.org/en-US/docs/HTML_in_XMLHttpRequest)
+	* [XMLHttpRequest status 0 (responseText is empty)](http://stackoverflow.com/questions/5005960/xmlhttprequest-status-0-responsetext-is-empty?codekitCB=402521304.787816)
 
 
 

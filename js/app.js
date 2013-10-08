@@ -260,14 +260,9 @@ App.Home = function(){
     $.getJSON("js/preloads.json", function(data){
       
       $.each(data.preloads, function(key, data){
-        console.log(data.name);
-
-        var source = $("#appIcon").html();
-        var template = Handlebars.compile(source);
-        var html = template(data)
-        $(home).append(html);
-
+        App.Icon.make_icon(data)
       });
+
     });
   }
 
@@ -275,8 +270,59 @@ App.Home = function(){
 
   var init_sub = pubsubz.subscribe('init', init);
 
+}();
+
+
+
+App.createNS("Icon");
+
+App.Icon = function(data){
+  
+  var Icon = function(data){
+  
+    this.name = data.name;
+    this.id = data.id;
+    this.number = data.number;
+    this.type = data.type;
+    this.chrome = data.chrome;
+
+    var source = $("#appIcon").html();
+    var template = Handlebars.compile(source);
+    var html = template(data)
+    $(home).append(html);
+  }
+
+  var make_icon = function(data){
+    var icon = new Icon(data);
+    App.BookmarkList.add_new(icon);
+  }
+  
+  return {
+    make_icon: make_icon
+  }
 
 }();
+
+
+
+App.createNS("Bookmarks");
+
+App.BookmarkList = function(){
+
+  var list = [];
+
+  var add_new = function(i){
+    list.push(i);
+  }
+
+  return {
+    add_new: add_new,
+    list: list
+  };
+
+}();
+
+
 
 
 App.createNS("HistoryManager");
