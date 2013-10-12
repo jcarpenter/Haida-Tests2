@@ -110,7 +110,7 @@ App.ScreenManager = function(){
 
   /*---- variables ---- */
 
-  var active_screen;
+  //var active_screen;
   var topdrawer1_isopen;
   var topdrawer2_isopen;
 
@@ -128,13 +128,13 @@ App.ScreenManager = function(){
 
   bottom_swipe.addEventListener("click", function() {
     //console.log("swipe up");
-    if(topdrawer1_isopen){
-      pubsubz.publish('close_topdrawer1');
-    } else if (topdrawer2_isopen){
-      pubsubz.publish('close_topdrawer2');
+    
+    if (App.History.get_active_screen().id == "home"){
+      console.log("already home")
     } else {
-      pubsubz.publish('open_bottomdrawer');
+
     }
+
   });
 
   topleft_swipe.addEventListener("click", function() {
@@ -161,16 +161,6 @@ App.ScreenManager = function(){
 
 
   /*---- functions ---- */
-
-  var set_active_screen = function(target){
-    active_screen = target;
-    console.log("The active screen is now: " + active_screen)
-  }
-
-  var open_bottomdrawer = function(){
-    console.log("opened: home")
-    
-  }
 
   var showKeyboard = function(){
     $(keyboard).animo( { animation: "showKeyboard", duration: .2, timing: "ease-out", keep:"true"} )
@@ -218,23 +208,107 @@ App.ScreenManager = function(){
     });
   }
 
+
+
+  var Sheet = function(data){
+  
+    this.name = data.name;
+    this.id = data.id;
+    this.number = data.number;
+    this.type = data.type;
+    this.chrome = data.chrome;
+
+    var source = $("#Sheet").html();
+    var template = Handlebars.compile(source);
+    var html = template(data)
+    $(frame).append(html)
+
+    //create reference to HTML DOM object
+    this.html = $(frame).find("#sheet_" + this.id + "_" + this.number);
+  }
+
+
+  var open_sheet = function(topics,data){
+
+    //we pass in an object with info about sheet to be loaded.
+    
+    //console.log(data.id)
+    
+    if (data.id == "home" )
+    {
+      //transition
+      //update history
+      //console.log("open home")
+      set_active_screen(data);
+      console.log(active_screen.id)
+    } 
+      else if (data.chrome == "site" && active_screen.chrome == "site")
+    {
+      //load url in active_sheet
+      //transition
+      //update history
+      console.log("load site in current window")
+    } 
+      else
+    {
+     
+      //check if data.id already exists in App.History.history_list
+      //aka: search array for an object that contains an id matching data.id
+
+      /*
+      if (target exists in App.History.history_list)
+      {
+        //bring to front
+        //transition
+        //update history
+      } 
+        else 
+      {
+        //make new Sheet ();
+        //transition
+        //update history
+      }
+      */
+    }
+
+    var sheet = new Sheet(data);
+
+    $(sheet.html).click(function(){
+      console.log(sheet.name);
+      console.log(sheet.id);
+      console.log(sheet.number);
+      console.log(sheet.type);
+      console.log(sheet.chrome);
+    })
+
+    //var id = data[0]
+    //console.log(data.id)
+    
+    //var uuu = App.FindById.test(id);
+    //console.log(uuu);
+
+  }
+
+  /*---- init ---- */
+
   var init = function(){
 
+    //active_screen = App.History.active_screen;
+    
     rocketbar_drawer.classList.toggle("hidden");
     settings_drawer.classList.toggle("hidden");
     
-    //create home icons
-
   }
 
   /*---- subscribers ---- */
 
   var init_sub = pubsubz.subscribe('init', init);
-  var bottomdrawer_sub = pubsubz.subscribe('open_bottomdrawer', open_bottomdrawer);
   var open_topdrawer1_sub = pubsubz.subscribe('open_topdrawer1', open_topdrawer1);
   var close_topdrawer1_sub = pubsubz.subscribe('close_topdrawer1', close_topdrawer1);
   var open_topdrawer2_sub = pubsubz.subscribe('open_topdrawer2', open_topdrawer2);
   var close_topdrawer2_sub = pubsubz.subscribe('close_topdrawer2', close_topdrawer2);
+  var open_sheet_sub = pubsubz.subscribe('open_sheet', open_sheet);
+
 
   /*---- return ---- */
 
@@ -243,6 +317,69 @@ App.ScreenManager = function(){
 	}
 
 }();
+
+
+
+
+App.createNS("History");
+
+App.History = function(){
+  
+  /*---- variables ---- */
+
+  var active_screen = {};
+  var history_list = [];
+  var space_list = [];
+
+  /*---- function ---- */
+
+  var set_active_screen = function(target){
+    active_screen = target;
+    console.log("The active screen is now: " + active_screen.id + "_" + active_screen.number)
+    //console.log(get_active_screen());
+  }
+
+  var get_active_screen = function(){
+    return active_screen;
+  }
+
+  //logic for keeping time and space arrays up to date will live here
+  var update_count = function(){
+    console.log(history_list.length);
+    console.log(space_list.length);
+  }
+
+  /*---- return ---- */
+
+  return {
+    set_active_screen: set_active_screen,
+    get_active_screen: get_active_screen,
+    history_list: history_list,
+    update_count: update_count
+  }
+}();
+
+
+
+//console.log(App.History.active_screen)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -255,7 +392,11 @@ App.Home = function(){
 
   /*---- functions ---- */
 
+  /*---- init ---- */
+  
   var init = function(){
+
+    App.History.set_active_screen({"name":"Home", "id":"home", "number":"0"})    
 
     $.getJSON("js/preloads.json", function(data){
       
@@ -269,6 +410,8 @@ App.Home = function(){
   /*---- subscribers ---- */
 
   var init_sub = pubsubz.subscribe('init', init);
+
+  /*---- return ---- */
 
 }();
 
@@ -289,15 +432,24 @@ App.Icon = function(data){
     var source = $("#appIcon").html();
     var template = Handlebars.compile(source);
     var html = template(data)
-    $(home).append(html);
+    $(home).append(html)
+
+    //create reference to HTML DOM object
+    this.html = $(home).find("#icon_" + this.id);
+
   }
 
   var make_icon = function(data){
     var icon = new Icon(data);
     App.BookmarkList.add_new(icon);
+
+    $(icon.html).click(function(){
+      pubsubz.publish("open_sheet", icon);
+    });
+
   }
   
-  return {
+  return { 
     make_icon: make_icon
   }
 
@@ -309,11 +461,17 @@ App.createNS("Bookmarks");
 
 App.BookmarkList = function(){
 
+  /*---- variables ---- */
+
   var list = [];
+
+  /*---- functions ---- */
 
   var add_new = function(i){
     list.push(i);
   }
+
+  /*---- return ---- */
 
   return {
     add_new: add_new,
@@ -322,27 +480,6 @@ App.BookmarkList = function(){
 
 }();
 
-
-
-
-App.createNS("HistoryManager");
-
-App.HistoryManager = function(){
-	var _time_list = [];
-	var _space_list = [];
-
-	//logic for keeping time and space arrays up to date will live here
-	var update_count = function(){
-		console.log(_time_list.length);
-		console.log(_space_list.length);
-	}
-
-	return {
-		update_count: update_count
-	}
-}();
-
-App.HistoryManager.update_count();
 
 
 

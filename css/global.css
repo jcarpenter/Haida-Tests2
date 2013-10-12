@@ -126,6 +126,18 @@ html {
   -webkit-overflow-scrolling: touch;
   z-index: -20; }
 
+.sheet {
+  width: 100%;
+  height: 100%;
+  background: black;
+  /*position: absolute;
+  top: 40px; left: 0;
+  overflow: scroll;*/
+  color: yellow;
+  font-size: 3em;
+  text-align: left;
+  opacity: .5; }
+
 #home {
   padding-top: 30px; }
   #home .app-icon {

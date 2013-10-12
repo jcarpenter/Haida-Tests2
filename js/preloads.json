@@ -62,19 +62,32 @@
 
 	{
 		"name": "Contacts",
-		"id": "contacts"
+		"id": "contacts",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
 	},
 	{
 		"name": "Video",
-		"id": "video"
+		"id": "video",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
 	},
 	{
 		"name": "Camera",
-		"id": "camera"
+		"id": "camera",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
+
 	},
 	{
 		"name": "Gallery",
-		"id": "gallery"
+		"id": "gallery",
+		"number": 0,
+		"type": "symbol",
+		"chrome": "app"
 	},
 
 

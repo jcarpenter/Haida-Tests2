@@ -28,13 +28,21 @@
 
                 <!-- Icon template -->
                 <script id="appIcon" type="text/x-handlebars-template">
-                    <div class="app-icon">
+                    <div id="icon_{{id}}" class="app-icon">
                         <img src="images/icons/icon_{{id}}.png" />
                         <div>{{name}}</div>
                     </div>
                 </script>
 
                 </div>
+
+                <!-- Icon template -->
+                <script id="Sheet" type="text/x-handlebars-template">
+                    <div id="sheet_{{id}}_{{number}}" class="sheet">
+                        <h1>{{name}}</h1>
+                    </div>
+                </script>
+
             </div>
             <div id="settings-drawer">
                 <img src="images/system/settingsDrawer.png"/>
