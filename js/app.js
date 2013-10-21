@@ -123,18 +123,17 @@ App.ScreenManager = function(){
   var settings_drawer = document.getElementById('settings-drawer');
   var keyboard = document.getElementById('keyboard');
 
-
   /*---- touch handlers ---- */
 
   bottom_swipe.addEventListener("click", function() {
-    //console.log("swipe up");
-    
-    if (App.History.get_active_screen().id == "home"){
-      console.log("already home")
+    console.log("-------swipe up-------");
+    if (topdrawer1_isopen) {
+      pubsubz.publish('close_topdrawer1');
+    } else if (topdrawer2_isopen){
+      pubsubz.publish('close_topdrawer2');
     } else {
-
+      pubsubz.publish('open_bottomdrawer', App.Home.home_obj)
     }
-
   });
 
   topleft_swipe.addEventListener("click", function() {
@@ -224,34 +223,88 @@ App.ScreenManager = function(){
     $(frame).append(html)
 
     //create reference to HTML DOM object
-    this.html = $(frame).find("#sheet_" + this.id + "_" + this.number);
+    this.html = $(frame).find(this.id + "_" + this.number);
   }
 
 
-  var open_sheet = function(topics,data){
+  var open_sheet = function(topics,incoming){
 
     //we pass in an object with info about sheet to be loaded.
+    //we need to check for duplicates already present in the history
+    //we need to figure out what the incoming is
     
-    //console.log(data.id)
-    
-    if (data.id == "home" )
+    var outgoing = App.History.get_active_screen();
+
+    if (incoming.id == "home" && outgoing.id == "undefined")
     {
-      //transition
-      //update history
-      //console.log("open home")
-      set_active_screen(data);
-      console.log(active_screen.id)
-    } 
-      else if (data.chrome == "site" && active_screen.chrome == "site")
+      
+      var sheet = new Sheet(incoming);
+      
+      $.getJSON("js/preloads.json", function(data){
+        $.each(data.preloads, function(key, data){
+          App.Icon.make_icon(data)
+        });
+      });
+
+      $(home).animo( { animation: "flipInX", duration: 1, timing: "ease-out"} );
+      App.History.set_active_screen(sheet);
+
+    }
+    else if (incoming.id == "home" && outgoing.id != "home") //if home is selected and NOT already active, open home...    
+    {
+      //animate out active sheet
+      //hide the inactive sheet
+      //animate in home
+      //set home as active_screen
+
+      $(outgoing.html).removeClass("active_sheet");
+      //$(home).addClass("active_sheet");
+
+      $(outgoing.html).animo( {animation: "closeSheet", duration: 1, timing: "ease-out"}, function(){
+        $(outgoing.html).animo("cleanse");
+        $(outgoing.html).addClass("inactive_sheet")
+      });
+      $(home).animo( { animation: "flipInX", duration: 1, timing: "ease-out"} );
+      
+      App.History.set_active_screen(incoming); 
+    }
+
+
+    else if (incoming.chrome == "site" && outgoing.chrome == "site")
     {
       //load url in active_sheet
       //transition
       //update history
       console.log("load site in current window")
     } 
-      else
+
+    else
     {
-     
+      //check for duplicates...
+
+      var sheet = new Sheet(incoming);
+
+      /*
+      $(sheet.html).click(function(){
+        console.log(sheet.name);
+        console.log(sheet.id);
+        console.log(sheet.number);
+        console.log(sheet.type);
+        console.log(sheet.chrome);
+      })
+      */
+
+      $(outgoing.html).removeClass("active_sheet");
+      $(incoming).addClass("active_sheet");
+
+      $(sheet.html).animo( { animation: "openSheet", duration: 1, timing: "ease-out"} );
+      App.History.set_active_screen(sheet);
+
+      console.log(sheet.html);
+
+      //console.log("open_sheet: ");
+      //console.log(App.History.get_active_screen());
+
       //check if data.id already exists in App.History.history_list
       //aka: search array for an object that contains an id matching data.id
 
@@ -271,15 +324,9 @@ App.ScreenManager = function(){
       */
     }
 
-    var sheet = new Sheet(data);
-
-    $(sheet.html).click(function(){
-      console.log(sheet.name);
-      console.log(sheet.id);
-      console.log(sheet.number);
-      console.log(sheet.type);
-      console.log(sheet.chrome);
-    })
+    /*
+    
+    */
 
     //var id = data[0]
     //console.log(data.id)
@@ -303,6 +350,7 @@ App.ScreenManager = function(){
   /*---- subscribers ---- */
 
   var init_sub = pubsubz.subscribe('init', init);
+  var open_bottomdrawer_sub = pubsubz.subscribe('open_bottomdrawer', open_sheet)
   var open_topdrawer1_sub = pubsubz.subscribe('open_topdrawer1', open_topdrawer1);
   var close_topdrawer1_sub = pubsubz.subscribe('close_topdrawer1', close_topdrawer1);
   var open_topdrawer2_sub = pubsubz.subscribe('open_topdrawer2', open_topdrawer2);
@@ -335,8 +383,8 @@ App.History = function(){
 
   var set_active_screen = function(target){
     active_screen = target;
-    console.log("The active screen is now: " + active_screen.id + "_" + active_screen.number)
-    //console.log(get_active_screen());
+    //console.log("The active screen is now: ");
+    //console.log(active_screen.id + "_" + active_screen.number)
   }
 
   var get_active_screen = function(){
@@ -389,6 +437,11 @@ App.Home = function(){
 
   /*---- variables & objects ---- */
 
+  var home_obj = {
+    "name": "Home",
+    "id": "home",
+    "number": 0,
+  }
 
   /*---- functions ---- */
 
@@ -396,15 +449,10 @@ App.Home = function(){
   
   var init = function(){
 
-    App.History.set_active_screen({"name":"Home", "id":"home", "number":"0"})    
+    //App.History.set_active_screen({"name":"Home", "id":"home", "number":"0"})  
 
-    $.getJSON("js/preloads.json", function(data){
-      
-      $.each(data.preloads, function(key, data){
-        App.Icon.make_icon(data)
-      });
+    pubsubz.publish('open_sheet', home_obj)
 
-    });
   }
 
   /*---- subscribers ---- */
@@ -412,6 +460,10 @@ App.Home = function(){
   var init_sub = pubsubz.subscribe('init', init);
 
   /*---- return ---- */
+
+  return {
+    home_obj: home_obj
+  }
 
 }();
 

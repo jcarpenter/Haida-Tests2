@@ -373,6 +373,17 @@
       "initialSize" : 944,
       "fileType" : 8192
     },
+    "\/images\/icons\/icon_messages.png" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/images\/icons\/icon_messages.png",
+      "processed" : 0,
+      "outputAbbreviatedPath" : "\/images\/icons\/icon_messages.png",
+      "initialSize" : 1090,
+      "fileType" : 8192
+    },
     "\/css\/scss\/global.scss" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -384,17 +395,6 @@
       "outputAbbreviatedPath" : "\/css\/global.css",
       "fileType" : 4,
       "debugStyle" : 0
-    },
-    "\/images\/icons\/icon_messages.png" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/images\/icons\/icon_messages.png",
-      "processed" : 0,
-      "outputAbbreviatedPath" : "\/images\/icons\/icon_messages.png",
-      "initialSize" : 1090,
-      "fileType" : 8192
     },
     "\/css\/normalize.css" : {
       "ignoreWasSetByUser" : 0,

@@ -24,25 +24,7 @@
             <div id="topleft-swipe"></div>
             <div id="topright-swipe"></div>
             <div id="frame">
-                <div id="home">
-
-                <!-- Icon template -->
-                <script id="appIcon" type="text/x-handlebars-template">
-                    <div id="icon_{{id}}" class="app-icon">
-                        <img src="images/icons/icon_{{id}}.png" />
-                        <div>{{name}}</div>
-                    </div>
-                </script>
-
-                </div>
-
-                <!-- Icon template -->
-                <script id="Sheet" type="text/x-handlebars-template">
-                    <div id="sheet_{{id}}_{{number}}" class="sheet">
-                        <h1>{{name}}</h1>
-                    </div>
-                </script>
-
+                <!-- <div id="home"></div> -->
             </div>
             <div id="settings-drawer">
                 <img src="images/system/settingsDrawer.png"/>
@@ -53,17 +35,27 @@
                 <div id="keyboard"></div>
                 
             </div>
-            <!-- <object type="text/html" id="frame" data="home.html"></object> -->
-            <!-- <div id="sheets">HAIDA Prototype</div> -->
         </div>
 
 
         <!-- TEMPLATES -->
 
-         <script id="sheet" type="text/x-handlebars-template">
-            <div class="sheet">Blank sheet</div>
+        <!-- Icon -->
+        <script id="appIcon" type="text/x-handlebars-template">
+            <div id="icon_{{id}}" class="app-icon">
+                <img src="images/icons/icon_{{id}}.png" />
+                <div>{{name}}</div>
+            </div>
         </script>
 
+        <!-- Sheet -->
+        <script id="Sheet" type="text/x-handlebars-template">
+            <div id="{{id}}_{{number}}" class="sheet">
+                <h1>{{name}}</h1>
+            </div>
+        </script>
+
+        <!-- SCRIPT IMPORTS -->
 
         <script type="text/javascript" src="js/handlebars.js"></script>
         <script type="text/javascript" src="js/app.js"></script>

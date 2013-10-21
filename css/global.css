@@ -127,6 +127,9 @@ html {
   z-index: -20; }
 
 .sheet {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background: black;
@@ -137,6 +140,14 @@ html {
   font-size: 3em;
   text-align: left;
   opacity: .5; }
+
+.inactive_sheet {
+  z-index: 0;
+  left: -100%;
+  display: hidden; }
+
+.active_sheet {
+  z-index: 20; }
 
 #home {
   padding-top: 30px; }
@@ -286,3 +297,33 @@ html {
 
   100% {
     opacity: 0; } }
+
+.openHome {
+  -webkit-animation-name: openHome; }
+
+@-webkit-keyframes openHome {
+  0% {
+    -webkit-transform: translateY(960px); }
+
+  100% {
+    -webkit-transform: translateY(0px); } }
+
+.openSheet {
+  -webkit-animation-name: openSheet; }
+
+@-webkit-keyframes openSheet {
+  0% {
+    -webkit-transform: translateX(640px); }
+
+  100% {
+    -webkit-transform: translateX(0px); } }
+
+.closeSheet {
+  -webkit-animation-name: closeSheet; }
+
+@-webkit-keyframes closeSheet {
+  0% {
+    -webkit-transform: translateX(0px); }
+
+  100% {
+    -webkit-transform: translateX(-640px); } }
