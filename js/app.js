@@ -2,7 +2,8 @@
 
 
 
-/*-------------------- Declare App namespace --------------------*/
+
+/*-------------------- DECLARE APP NAMESPACE  --------------------*/
 
 //For namespacing, we're going to use a single global variable. App.
 //To check that the namespace is not already being used, we will use first use
@@ -12,7 +13,7 @@ var App = App || {};
 
 
 
-/*-------------------- Define nested namespace generator --------------------*/
+/*-------------------- NAMESPACE GENERATOR FUNCTION --------------------*/
 
 // Create a general purpose nested namespace generating function
 // This will allow us to create nested namespaces a bit easier
@@ -45,7 +46,7 @@ App.createNS = function (namespace) {
 
 
 
-/*-------------------- Define App  --------------------*/
+/*-------------------- DEFINE APP NAMESPACE  --------------------*/
 
 //and run init() to start things...
 
@@ -66,249 +67,362 @@ App.createNS = function (namespace) {
 
 
 
+/*-------------------- TOUCH TARGETS --------------------*/
 
+App.createNS("TouchTargets")
 
-
-/*-------------------- Declare PubSub object --------------------*/
-
-//Using Pubsubz, from Addy Osmani
-//https://github.com/addyosmani/pubsubz
-//Will define pubsub as global var. Seems like it will work...
-//Not sure if whould instead define as nested namespace within App?
-
-
-
-/*
-var testSubscriber = function( topics , data ){
-    console.log( topics + ": " + data );
-};
-
-var testSubscription = pubsubz.subscribe( 'example1', testSubscriber );
-
-pubsubz.publish( 'example1', 'hello world!' );
-pubsubz.publish( 'example1', ['test','a','b','c'] );
-pubsubz.publish( 'example1', [{'color':'blue'},{'text':'hello'}] );
-
-setTimeout(function(){
-    pubsubz.unsubscribe( testSubscription );
-}, 0);
-
-pubsubz.publish( 'example1', 'hello again!' );
-*/
-
-
-
-
-
-
-/*-------------------- Managers --------------------*/
-
-
-App.createNS("ScreenManager");
-
-App.ScreenManager = function(){
+App.TouchTargets = function(){
 
   /*---- variables ---- */
 
-  //var active_screen;
-  var topdrawer1_isopen;
-  var topdrawer2_isopen;
-
-  var bottom_swipe = document.getElementById('bottom-swipe');
-  var topleft_swipe = document.getElementById('topleft-swipe');
-  var topright_swipe = document.getElementById('topright-swipe');
-
-  var status_bar = document.getElementById('status-bar');
-  var rocketbar_drawer = document.getElementById('rocketbar-drawer');
-  var settings_drawer = document.getElementById('settings-drawer');
-  var keyboard = document.getElementById('keyboard');
-
-  /*---- touch handlers ---- */
-
-  bottom_swipe.addEventListener("click", function() {
-    console.log("-------swipe up-------");
-    if (topdrawer1_isopen) {
-      pubsubz.publish('close_topdrawer1');
-    } else if (topdrawer2_isopen){
-      pubsubz.publish('close_topdrawer2');
-    } else {
-      pubsubz.publish('open_bottomdrawer', App.Home.home_obj)
-    }
-  });
-
-  topleft_swipe.addEventListener("click", function() {
-    //console.log("open rocketbar");
-    if(topdrawer1_isopen){
-      //
-    } else if (topdrawer2_isopen){
-      //
-    } else {
-      pubsubz.publish('open_topdrawer1');
-    }
-  });
-
-  topright_swipe.addEventListener("click", function() {
-    //console.log("open settings drawer")
-    if(topdrawer1_isopen){
-      //
-    } else if (topdrawer2_isopen){
-      //
-    } else {
-      pubsubz.publish('open_topdrawer2');
-    }
-  });
-
+  var topleft = document.getElementById("topleft");
+  var topmiddle = document.getElementById("topmiddle");
+  var topright = document.getElementById("topright");
+  var bottom = document.getElementById("bottom");
 
   /*---- functions ---- */
 
-  var showKeyboard = function(){
-    $(keyboard).animo( { animation: "showKeyboard", duration: .2, timing: "ease-out", keep:"true"} )
+  var toggle_targets = function() {
+    topleft.classList.toggle("display_none");
+    topmiddle.classList.toggle("display_none");
+    topright.classList.toggle("display_none");
   }
 
-  var hideKeyboard = function(){
-    $(keyboard).animo( { animation: "hideKeyboard", duration: .2, timing: "ease-out", keep:"true"} )
+  /*---- return ---- */
+
+  return {
+    topleft: topleft,
+    topmiddle: topmiddle,
+    topright: topright,
+    bottom: bottom,
+    toggle_targets: toggle_targets
   }
 
-  var open_topdrawer1 = function(){
-    showKeyboard();
-    $(status_bar).animo( { animation: "openFullRocketBar", duration: .2, timing: "ease-out", keep:"true"} );
-    $(rocketbar_drawer).children("#cursor").animo( { animation: "blinking", duration: 1, timing: "ease-out", iterate: "infinite",} );
-    $(rocketbar_drawer).children("#background").animo( { animation: "darkenBG", duration: .3, timing: "ease-out", keep:"true"} );
-    rocketbar_drawer.classList.toggle("hidden");
-    topdrawer1_isopen = true;
+}();
+
+
+
+
+/*-------------------- ROCKET BAR --------------------*/
+
+App.createNS("RocketBar");
+
+App.RocketBar = function() {
+
+  /*---- variables ---- */
+
+  var rocket_bar = document.getElementById("rocket-bar");
+  var cancel = document.getElementById("cancel");
+  var rb_title = document.getElementById("title");
+
+  /*---- interactions ---- */
+
+  App.TouchTargets.topleft.addEventListener("click", function() {
+    pubsubz.publish('focus_rb');
+  });
+
+  cancel.addEventListener("click", function() {
+    pubsubz.publish('close_rb');
+  });
+
+  /*---- functions ---- */
+
+  var update_title = function(n) {
+    rb_title.innerHTML = n;
   }
 
-  var close_topdrawer1 = function(){
-    //console.log("closed: rocketbar")
-    hideKeyboard();
-    $(status_bar).animo( { animation: "closeFullRocketBar", duration: .2, timing: "ease-out"} );
-    $(rocketbar_drawer).animo( { animation: "fadeOut", duration: .2, timing: "ease-out", keep:"true"}, function(){
-      $(rocketbar_drawer).animo("cleanse");
-      $(rocketbar_drawer).children().animo("cleanse");
-      rocketbar_drawer.classList.toggle("hidden");
-      topdrawer1_isopen = false;
-    });
+  var show_rb = function () {
+    App.TouchTargets.toggle_targets();
+    rocket_bar.classList.add("show");
   }
 
-  var open_topdrawer2 = function(){
-    $(settings_drawer).animo( { animation: "darkenBG", duration: .3, timing: "ease-out", keep:"true"} );
-    $(settings_drawer).children("img").animo( { animation: "slideInDown", duration: .3, timing: "ease-out", keep:"true"} );
-    settings_drawer.classList.toggle("hidden");
-    topdrawer2_isopen = true;
+  var focus_rb = function() {
+    App.TouchTargets.toggle_targets();
+    pubsubz.publish("open_keyboard");
+    rocket_bar.classList.add("focus");
   }
 
-  var close_topdrawer2 = function(){
-    $(settings_drawer).animo( { animation: "lightenBG", duration: .3, timing: "ease-out", keep:"true"} );
-    $(settings_drawer).children("img").animo( { animation: "slideOutUp", duration: .3, timing: "ease-out"}, function(){
-      $(settings_drawer).animo("cleanse");
-      $(settings_drawer).children("img").animo("cleanse");
-      settings_drawer.classList.toggle("hidden");
-      topdrawer2_isopen = false;
-    });
+  var close_rb = function() {
+    App.TouchTargets.toggle_targets();
+    pubsubz.publish("close_keyboard");
+    rocket_bar.classList.remove("show");
+    rocket_bar.classList.remove("focus");
   }
 
+  /*---- subscribers ---- */
+
+  var show_rb_sub = pubsubz.subscribe("show_rb", show_rb);
+  var focus_rb_sub = pubsubz.subscribe("focus_rb", focus_rb);
+  var close_rb_sub = pubsubz.subscribe("close_rb", close_rb);
+
+  /*---- return ---- */
+
+  return {
+    rb_title: rb_title,
+    update_title: update_title
+  }
+
+}();
 
 
-  var Sheet = function(data){
+
+
+/*-------------------- KEYBOARD --------------------*/
+
+App.createNS("Keyboard");
+
+App.Keyboard = function() {
+
+  /*---- variables ---- */
+
+  var keyboard = document.getElementById("keyboard");
+
+  /*---- functions ---- */
+
+  var open_keyboard = function() {
+    keyboard.classList.add("open");
+  }
+
+  var close_keyboard = function() {
+    keyboard.classList.remove("open");
+  }
+
+  /*---- subscribers ---- */
+
+  var open_keyboard_sub = pubsubz.subscribe("open_keyboard", open_keyboard);
+  var close_keyboard_sub = pubsubz.subscribe("close_keyboard", close_keyboard);
+
+}();
+
+
+
+
+/*-------------------- NOTIFICATIONS --------------------*/
+
+App.createNS("Notifications")
+
+App.Notifications = function() {
   
-    this.name = data.name;
-    this.id = data.id;
-    this.number = data.number;
-    this.type = data.type;
-    this.chrome = data.chrome;
+  /*---- variables ---- */
 
-    var source = $("#Sheet").html();
-    var template = Handlebars.compile(source);
-    var html = template(data)
-    $(frame).append(html)
+  var notifications_bar = document.getElementById("notifications-bar");
+  var notifications_drawer = document.getElementById("notifications-drawer");
 
-    //create reference to HTML DOM object
-    this.html = $(frame).find(this.id + "_" + this.number);
+  /*---- interactions ---- */
+
+  notifications_bar.addEventListener("click", function(){
+    pubsubz.publish("open_notdrawer");
+  })
+
+  notifications_drawer.addEventListener("click", function(){
+    pubsubz.publish("close_notdrawer");
+  })
+
+  /*---- functions ---- */
+
+  var open_notdrawer = function() {
+    notifications_drawer.classList.toggle("open");
   }
 
+  var close_notdrawer = function() {
+    notifications_drawer.classList.toggle("open");
+  }
 
-  var open_sheet = function(topics,incoming){
+  /*---- subscribers ---- */
 
-    //we pass in an object with info about sheet to be loaded.
-    //we need to check for duplicates already present in the history
-    //we need to figure out what the incoming is
-    
+  var open_notdrawer_sub = pubsubz.subscribe("open_notdrawer", open_notdrawer);
+  var close_notdrawer_sub = pubsubz.subscribe("close_notdrawer", close_notdrawer);
+
+}()
+
+
+
+
+/*-------------------- SETTINGS DRAWER --------------------*/
+
+App.createNS("SettingsDrawer");
+
+App.SettingsDrawer = function() {
+
+  /*---- variables ---- */
+
+  var old_title;
+  var settings_drawer = document.getElementById("settings-drawer");
+
+  /*---- interactions ---- */
+
+  App.TouchTargets.topright.addEventListener("click", function() {
+    pubsubz.publish("open_settingsdrawer");
+  })
+
+  settings_drawer.addEventListener("click", function() {
+    pubsubz.publish("close_settingsdrawer");
+  });
+
+  /*---- functions ---- */
+
+  var init = function() {
+    settings_drawer.classList.add("display_none");
+  }
+
+  var get_date = function() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = mm+'/'+dd+'/'+yyyy;
+    return(today);
+  }
+
+  var open_settingsdrawer = function() {
+    old_title = App.RocketBar.rb_title.innerHTML;
+    App.RocketBar.update_title(get_date());
+    settings_drawer.classList.add("open")
+  }
+  
+  var close_settingsdrawer = function() {
+    App.RocketBar.update_title(old_title);
+    settings_drawer.classList.remove("open")
+  }
+
+  /*---- subscriptions ---- */
+
+  var init_sub = pubsubz.subscribe("init", init)
+  var open_sd_sub = pubsubz.subscribe("open_settingsdrawer", open_settingsdrawer);
+  var close_sd_sub = pubsubz.subscribe("close_settingsdrawer", close_settingsdrawer);
+
+}();
+
+
+
+
+/*-------------------- TASK MANAGER --------------------*/
+
+App.createNS("TaskManager");
+
+App.TaskManager = function(){
+
+  /*---- variables ---- */
+
+  /*---- touch handlers ---- */
+
+  /*---- functions ---- */
+
+  //open tm
+  //cancel tm
+  ////select card
+
+  /*---- subcriptions ---- */
+
+  /*---- return ---- */  
+
+
+
+}();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*---- interactions ---- */
+
+  /*
+  //SWIPE FROM BOTTOM
+  bottom.addEventListener("click", function() {
+    if (rocketbar_isopen) {
+      pubsubz.publish('close_rocketbar');
+    } else if (settingsdrawer_isopen){
+      pubsubz.publish('close_settingsdrawer');
+    } else if (App.History.get_active_screen().id == "home") {
+      // do nothing
+    } else {
+      pubsubz.publish('open_bottom', App.Home.home_obj)
+    }
+  });
+  */
+
+
+  /*
+  var open_sheet = function(topics,incoming) {
+
+
     var outgoing = App.History.get_active_screen();
 
-    if (incoming.id == "home" && outgoing.id == "undefined")
+
+    //SETUP HOME
+    if (incoming.id == "home" && outgoing.id == undefined) //setup home sheet
     {
       
       var sheet = new Sheet(incoming);
-      
-      $.getJSON("js/preloads.json", function(data){
-        $.each(data.preloads, function(key, data){
+      home = sheet;
+  
+      $.getJSON("js/preloads.json", function(data) {
+        $.each(data.preloads, function(key, data) {
           App.Icon.make_icon(data)
         });
       });
 
-      $(home).animo( { animation: "flipInX", duration: 1, timing: "ease-out"} );
-      App.History.set_active_screen(sheet);
+      $(home.html).animo( { animation: "PushfromForeground", duration: sheet_speed, timing: "ease-out"} );
+      App.History.set_active_screen(home);
 
     }
-    else if (incoming.id == "home" && outgoing.id != "home") //if home is selected and NOT already active, open home...    
+
+
+    //LOAD HOME
+    else if (incoming.id == "home" && outgoing.id != "home") 
     {
-      //animate out active sheet
-      //hide the inactive sheet
-      //animate in home
-      //set home as active_screen
+
+      console.log(home)
+      $(home.html).removeClass("inactive_sheet");
+      $(home.html).addClass("active_sheet");
+      $(home.html).animo( { animation: "PushfromForeground", duration: sheet_speed, timing: "ease-out"} );
 
       $(outgoing.html).removeClass("active_sheet");
-      //$(home).addClass("active_sheet");
-
-      $(outgoing.html).animo( {animation: "closeSheet", duration: 1, timing: "ease-out"}, function(){
+      $(outgoing.html).animo( {animation: "PushtoBackground", duration: sheet_speed, timing: "ease-out"}, function(){
         $(outgoing.html).animo("cleanse");
         $(outgoing.html).addClass("inactive_sheet")
       });
-      $(home).animo( { animation: "flipInX", duration: 1, timing: "ease-out"} );
-      
-      App.History.set_active_screen(incoming); 
+      App.History.set_active_screen(home); 
+
     }
 
 
+    //LOAD WEBSITE
     else if (incoming.chrome == "site" && outgoing.chrome == "site")
     {
       //load url in active_sheet
       //transition
       //update history
-      console.log("load site in current window")
+      //console.log("load site in current window")
+
     } 
 
-    else
+
+    //LOAD SHEET
+    else if (outgoing.id == "home")
     {
-      //check for duplicates...
-
-      var sheet = new Sheet(incoming);
-
-      /*
-      $(sheet.html).click(function(){
-        console.log(sheet.name);
-        console.log(sheet.id);
-        console.log(sheet.number);
-        console.log(sheet.type);
-        console.log(sheet.chrome);
-      })
-      */
-
-      $(outgoing.html).removeClass("active_sheet");
-      $(incoming).addClass("active_sheet");
-
-      $(sheet.html).animo( { animation: "openSheet", duration: 1, timing: "ease-out"} );
-      App.History.set_active_screen(sheet);
-
-      console.log(sheet.html);
-
-      //console.log("open_sheet: ");
-      //console.log(App.History.get_active_screen());
-
+      
+      //CHECK IF INCOMING ALREADY EXISTS...
       //check if data.id already exists in App.History.history_list
       //aka: search array for an object that contains an id matching data.id
 
-      /*
+      
       if (target exists in App.History.history_list)
       {
         //bring to front
@@ -321,53 +435,234 @@ App.ScreenManager = function(){
         //transition
         //update history
       }
-      */
+      
+
+
+      var sheet = new Sheet(incoming);
+      $(sheet.html).animo( { animation: "PushfromBackground", duration: sheet_speed, timing: "ease-out"}, function(){
+        $(sheet.html).addClass("active_sheet");
+      });
+
+      $(outgoing.html).animo( {animation: "PushtoForeground", duration: sheet_speed, timing: "ease-out"}, function(){
+        $(outgoing.html).animo("cleanse");
+        $(outgoing.html).removeClass("active_sheet");
+        $(outgoing.html).addClass("inactive_sheet")
+        App.History.set_active_screen(sheet);
+      });
+      
+
     }
 
-    /*
-    
-    */
+  }
+  */
 
-    //var id = data[0]
-    //console.log(data.id)
+
+
+
+
+
+
+/*-------------------- SCREEN MANAGER --------------------*/
+
+
+App.createNS("ScreenManager");
+
+App.ScreenManager = function(){
+
+  /*---- variables ---- */
+
+  var Sheet = function(data) {
+  
+    //Create sheet variables  
+    this.name = data.name;
+    this.id = data.id;
+    this.number = data.number;
+    this.type = data.type;
+    this.chrome = data.chrome;
+
+    //Create sheet from Handlebars template
+    var source = $("#Sheet").html();
+    var template = Handlebars.compile(source);
+    var html = template(data)
+    $("#frame").append(html)
     
-    //var uuu = App.FindById.test(id);
-    //console.log(uuu);
+    //Create variable for the sheet HTML element
+    this.html = $("#frame").find("#" + this.id + "_" + this.number);
 
   }
 
-  /*---- init ---- */
+  /*---- functions ---- */
 
-  var init = function(){
-
-    //active_screen = App.History.active_screen;
-    
-    rocketbar_drawer.classList.toggle("hidden");
-    settings_drawer.classList.toggle("hidden");
-    
+  var create_sheet = function(data) {
+    var sheet = new Sheet(data);
+    return sheet;
   }
 
   /*---- subscribers ---- */
 
-  var init_sub = pubsubz.subscribe('init', init);
-  var open_bottomdrawer_sub = pubsubz.subscribe('open_bottomdrawer', open_sheet)
-  var open_topdrawer1_sub = pubsubz.subscribe('open_topdrawer1', open_topdrawer1);
-  var close_topdrawer1_sub = pubsubz.subscribe('close_topdrawer1', close_topdrawer1);
-  var open_topdrawer2_sub = pubsubz.subscribe('open_topdrawer2', open_topdrawer2);
-  var close_topdrawer2_sub = pubsubz.subscribe('close_topdrawer2', close_topdrawer2);
-  var open_sheet_sub = pubsubz.subscribe('open_sheet', open_sheet);
-
+  var create_sheet_sub = pubsubz.subscribe('create_sheet', create_sheet);
 
   /*---- return ---- */
 
 	return {
-		
+    create_sheet: create_sheet
 	}
 
 }();
 
 
 
+
+
+
+
+
+
+
+
+
+
+/*-------------------- TRANSITIONS --------------------*/
+
+App.createNS("Transition");
+
+App.Transition = function(){
+
+  var open = function(i){
+    //var test = App.Home.sheet;
+    $(i.html).animo( { animation: "PushfromForeground", duration: .4, timing: "ease-out"} );
+    
+    if(i.chrome = "home") {
+      pubsubz.publish("show_rb");
+    }
+
+  }
+
+  return {
+    open: open
+  }
+
+}();
+
+
+
+
+
+
+
+
+
+
+
+/*-------------------- HOME --------------------*/
+
+App.createNS("Home");
+
+App.Home = function(){
+
+  /*---- variables ---- */
+
+  var sheet;
+
+  var object = {
+    "name": "Home",
+    "id": "home",
+    "number": 0,
+    "type": "symbol",
+    "chrome": "home"
+  }
+
+  /*---- functions ---- */
+  
+  var init = function(){
+    
+    //Create home sheet
+    sheet = App.ScreenManager.create_sheet(object);
+
+    $.getJSON("js/preloads.json", function(data) {
+      $.each(data.preloads, function(key, data) {
+        App.Icon.make_icon(data)
+      });
+    });
+
+  }
+
+  /*---- subscribers ---- */
+
+  var init_sub = pubsubz.subscribe('init', init);
+
+  /*---- return ---- */
+
+  return {
+    sheet: function() { return sheet; },
+    object: object
+  }
+
+}();
+
+
+/*-------------------- ICONS --------------------*/
+
+App.createNS("Icon");
+
+App.Icon = function(data){
+  
+  var Icon = function(data){
+  
+    //Setup variables
+    this.name = data.name;
+    this.id = data.id;
+    this.number = data.number;
+    this.type = data.type;
+    this.chrome = data.chrome;
+
+    //Create icon from handlebars template
+    var source = $("#appIcon").html();
+    var template = Handlebars.compile(source);
+    var html = template(data)
+    $("#home_0").append(html)
+
+    //create reference to icons HTML element
+    this.html = $("#home_0").find("#icon_" + this.id);
+  }
+
+  var make_icon = function(data){
+    var icon = new Icon(data);
+    App.BookmarkList.add_new(icon);
+
+    $(icon.html).click(function(){
+      pubsubz.publish("open_sheet", icon);
+    });
+  }
+  
+  return { 
+    make_icon: make_icon
+  }
+
+}();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*-------------------- HISTORY --------------------*/
 
 App.createNS("History");
 
@@ -383,8 +678,6 @@ App.History = function(){
 
   var set_active_screen = function(target){
     active_screen = target;
-    //console.log("The active screen is now: ");
-    //console.log(active_screen.id + "_" + active_screen.number)
   }
 
   var get_active_screen = function(){
@@ -393,8 +686,8 @@ App.History = function(){
 
   //logic for keeping time and space arrays up to date will live here
   var update_count = function(){
-    console.log(history_list.length);
-    console.log(space_list.length);
+    //console.log(history_list.length);
+    //console.log(space_list.length);
   }
 
   /*---- return ---- */
@@ -409,105 +702,7 @@ App.History = function(){
 
 
 
-//console.log(App.History.active_screen)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-App.createNS("Home");
-
-App.Home = function(){
-
-  /*---- variables & objects ---- */
-
-  var home_obj = {
-    "name": "Home",
-    "id": "home",
-    "number": 0,
-  }
-
-  /*---- functions ---- */
-
-  /*---- init ---- */
-  
-  var init = function(){
-
-    //App.History.set_active_screen({"name":"Home", "id":"home", "number":"0"})  
-
-    pubsubz.publish('open_sheet', home_obj)
-
-  }
-
-  /*---- subscribers ---- */
-
-  var init_sub = pubsubz.subscribe('init', init);
-
-  /*---- return ---- */
-
-  return {
-    home_obj: home_obj
-  }
-
-}();
-
-
-
-App.createNS("Icon");
-
-App.Icon = function(data){
-  
-  var Icon = function(data){
-  
-    this.name = data.name;
-    this.id = data.id;
-    this.number = data.number;
-    this.type = data.type;
-    this.chrome = data.chrome;
-
-    var source = $("#appIcon").html();
-    var template = Handlebars.compile(source);
-    var html = template(data)
-    $(home).append(html)
-
-    //create reference to HTML DOM object
-    this.html = $(home).find("#icon_" + this.id);
-
-  }
-
-  var make_icon = function(data){
-    var icon = new Icon(data);
-    App.BookmarkList.add_new(icon);
-
-    $(icon.html).click(function(){
-      pubsubz.publish("open_sheet", icon);
-    });
-
-  }
-  
-  return { 
-    make_icon: make_icon
-  }
-
-}();
-
-
+/*-------------------- BOOKMARKS --------------------*/
 
 App.createNS("Bookmarks");
 
@@ -539,37 +734,50 @@ App.BookmarkList = function(){
 
 
 
-/*-------------------- Tests --------------------*/
-
-/*
-var frame = document.getElementById("frame");
-
-function display(url){
-  console.log(url)
-  var xmlhttp;
-  xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange=function(){
-    //console.log(xmlhttp.responseText)
-    if (xmlhttp.readyState==4 && xmlhttp.status==200){
-        console.log("los")
-        idiot.innerHTML=xmlhttp.responseText;
-      }
-    }
-  xmlhttp.open("GET",url,true);
-  xmlhttp.responseType = "document";
-  xmlhttp.send();
-}
-
-document.getElementById("frame").addEventListener("click", function(){
-  display("http://localhost:8888/haida1/home.html");
-});
-
-*/
 
 
 
-/*-------------------- Initiate --------------------*/
 
-//App.init();
+
+
+
+/*-------------------- SETUP --------------------*/
+
+App.createNS("Setup")
+
+App.Setup = function(){
+
+  /*---- setup ---- */
+
+  var init = function(){
+
+    //Wait for things to setup before starting intro animations...
+    var setup_timer = setInterval(function() {
+      
+      stop_timer() 
+      App.Transition.open(App.Home.sheet());
+      //App.History.set_active_screen(sheet);
+
+    },500); 
+
+    var stop_timer = function() { clearInterval(setup_timer) }
+
+    /*
+    active_screen = App.History.active_screen;
+    rocketbar_drawer.classList.toggle("display_none");
+    settings_drawer.classList.toggle("display_none");
+    */
+  }
+
+  /*---- subscriptions ---- */
+
+  var init_sub = pubsubz.subscribe("init", init)
+
+}();
+
+
+
+
+/*-------------------- INITIATE --------------------*/
 
 pubsubz.publish('init');

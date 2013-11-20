@@ -1,3 +1,19 @@
+/*-------------- VARIABLES --------------*/
+
+$taskmanager-depth: -1840px;
+$background-depth: -640px;
+$normal-depth: 0px;
+$foreground-depth: 640px;
+$right-edge: 640px;
+$left-edge: 0px;
+
+$touchtarget-visibility: visible;
+$touchtarget-opacity: .2;
+$touchtarget-color: #33ccff;
+
+.display_none {
+	display: none;
+}
 
 
 
@@ -42,70 +58,328 @@ html {
 	}
 }
 
-//Screen (analagous to the Stage)
-#screen {
-	width: 100%;
-	height: 100%;
-	position: relative;
-	overflow: hidden;
-	z-index: 0;
-	background-color: gray;
-}
 
 
 
 
-/*-------------- SWIPE REGIONS --------------*/
 
-#bottom-swipe {
+/*-------------- TOUCH TARGETS --------------*/
+
+#bottom {
+	visibility: $touchtarget-visibility;
 	position: absolute;
 	height: 60px;	
 	bottom: 0px; left: 0px;
 	width: 100%;
-	background-color: blue;
-	opacity: 0;
+	background-color: $touchtarget-color;
+	opacity: $touchtarget-opacity;
 	z-index: 20;
 }
 
-#topleft-swipe {
+#topleft {
+	visibility: $touchtarget-visibility;
 	position: absolute;
-	height: 60px;	
+	height: 50px;	
 	top: 0px; left: 0px;
-	width: 70%;
-	background-color: blue;
-	opacity: 0;
+	width: 30%;
+	background-color: $touchtarget-color;
+	opacity: $touchtarget-opacity;
 	z-index: 20;
 }
 
-#topright-swipe {
+#topmiddle {
+	visibility: $touchtarget-visibility;
 	position: absolute;
 	height: 60px;	
+	top: 0px; left: 30%;
+	width: 38%;
+	background-color: $touchtarget-color;
+	opacity: $touchtarget-opacity;
+	z-index: 20;
+}
+
+#topright {
+	visibility: $touchtarget-visibility;
+	position: absolute;
+	height: 50px;	
 	top: 0px; right: 0px;
 	width: 30%;
-	background-color: blue;
-	opacity: 0;
+	background-color: $touchtarget-color;
+	opacity: $touchtarget-opacity;
 	z-index: 20;
 }
+
+
+
+/*-------------- FRAME --------------*/
+
+//Screen (analagous to the Stage)
+#screen {
+	width: 100%;
+	height: 100%;
+	display: -webkit-flex;
+	-webkit-flex-flow: column;
+	-webkit-justify-content: left;
+	-webkit-align-content: left;
+	-webkit-align-items: left;
+	//position: relative;
+	overflow: hidden;
+	z-index: 0;
+	background-color: #333333;
+	-webkit-transition: all 1s ease-in-out;
+
+}
+
+#frame {
+	-webkit-order: 0;
+	-webkit-flex: 1 1 auto;
+	-webkit-align-self: auto;
+	-webkit-perspective: 1200px;
+	overflow: hidden;
+	z-index: 0;
+	background-color: #333333;
+	color: white;
+}
+
+
+
+/*-------------- ROCKET BAR --------------*/
+
+#rocket-bar {
+	-webkit-order: 0;
+	-webkit-flex: 0 1 auto;
+	-webkit-align-self: auto;
+	height: 40px;
+	z-index: 1;
+	background: #000 url('../images/system/statusbar1.png') no-repeat right top;
+	-webkit-transition: all .3s ease-out;
+
+	#title {
+		position: absolute;
+		left: 6px; top: 3px;
+		font-size: 1.6em;
+		color: #989898;
+		-webkit-transition: all .3s ease-in-out;
+	}
+
+	.line {
+		width: 100%;
+		position: absolute;
+		top: 40px;
+		height: 1px;
+		opacity: 0;
+		background-color: rgba(255,255,255,.1);
+		-webkit-transition: all .3s ease-out;
+	}
+
+	.icon {
+		position: absolute;
+		top: 62px; left: 16px;
+		width: 32px;
+		height: 32px;
+		background: rgba(0,0,0,0) url('../images/icons/magnifying_glass.png') no-repeat right top;
+		opacity: 0;
+		-webkit-transition: all .3s ease-in-out;
+	}
+
+	#cancel {
+		opacity: 0;
+		position: absolute;
+		top: 56px; right: 0;
+		font-size: 2em;
+		margin: 0 20px;
+		padding: 0 0 0 20px;
+		color: #989898;
+  		z-index: -1000;
+		border-left: 1px solid rgba(255,255,255,.25);
+		-webkit-transition: all .25s ease-in-out;
+	}
+}
+
+
+#rocket-bar.show {
+
+	height: 120px;
+
+	#title 	{ opacity: 0; }
+	.line 	{ opacity: 1; }
+	.icon 	{ opacity: 1; }
+
+}
+
+#rocket-bar.focus {
+
+	height: 120px;
+
+  	#title {
+  		font-size: 2em;
+		left: 10px; top: 58px;
+		background-color: rgba(255,255,255,.1);
+  	}
+
+	.line {	opacity: 1; }
+	.icon 	{ opacity: 0; }
+
+  	#cancel {
+  		z-index: 1;
+		opacity: 1;
+  	}
+}
+
+
+
+
+
+/*-------------- KEYBOARD --------------*/
+
+#keyboard {
+	width: 100%;
+	height: 410px;
+	position: absolute;
+	bottom:-410px; left:0;
+	z-index: 1000;
+	background: url('../images/system/keyboard.png') no-repeat;
+	-webkit-transition: all .4s ease-out;
+}
+
+#keyboard.open {
+	bottom: 0;
+}
+
+
+
+
+/*-------------- NOTIFICATIONS --------------*/
+
+
+#notifications-bar {
+	-webkit-order: 0;
+	-webkit-flex: 0 1 auto;
+	-webkit-align-self: auto;
+	min-height: 20px;
+	text-align: center;
+	z-index: 1;
+	background-color: black;
+	color: white;
+	-webkit-transition: all .4s ease-out;
+}
+
+#notifications-drawer {
+	position: absolute;
+	top: 100%;
+	width: 100%;
+	height: 100%;
+	background: #191919;
+	z-index: 1000;
+	color: white;
+	-webkit-transition: all .4s ease-out;
+
+	ul {
+		position: relative;
+		list-style: none;
+		padding: 0;
+	}
+
+	li {
+
+		padding: 20px;
+		font-weight: normal;
+		border-bottom: 1px solid rgba(255,255,255,.1);
+		line-height: 1.2;
+		min-height: 60px;
+
+		.icon {
+			position: absolute;
+			left: 20px;
+		}
+
+		.tag, .body {
+			padding-left: 80px;
+		}
+
+		.tag {
+			font-weight: 500;
+			font-size: 1.6em;
+		}
+
+		.body {
+			color: rgba(255,255,255,.75);
+			font-size: 1.6em;
+		}
+
+		.time {
+			float: right;
+			color: rgba(255,255,255,.25);
+			font-size: 1.2em;
+		}
+	}
+}
+
+#notifications-drawer.open {
+	top: 0%;
+}
+
+
+/*-------------- SETTINGS DRAWER --------------*/
+
+#settings-drawer {
+	display: block;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	position: absolute;
+	top:40px; left:0;
+	z-index: -1000;
+	background-color: rgba(0,0,0,0);
+	-webkit-transition: all .3s ease-out;
+	
+	img {
+		position: absolute;
+		top:-100%;
+		box-shadow: 0px 10px 15px rgba(0, 0, 0, .5);
+		-webkit-transition: all .4s ease-out;
+	}
+}
+
+
+#settings-drawer.open {
+
+	z-index: 1000;
+	background-color: rgba(0,0,0,.75);
+
+	img {
+		top: 0px;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 /*-------------- CHROME --------------*/
 
-.hidden {
-	display: none;
-}
-
-#status-bar {
-	width: 100%;
-	height: 40px;
-	position: absolute;
-	top:0; left:0;
-	z-index: 12;
-	background: #000 url('../images/system/statusbar1.png') no-repeat right top;
-}
-
 #rocketbar-drawer {
+	display: none;
 	width: 100%;
 	height: 100%;
 	position: absolute;
@@ -127,53 +401,24 @@ html {
 	}
 }
 
-#settings-drawer {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	top:0; left:0;
-	z-index: 10;
-	img {
-		box-shadow: 0px 10px 15px rgba(0, 0, 0, .5);
-	}
-}
-
-#keyboard {
-	width: 100%;
-	height: 410px;
-	position: absolute;
-	bottom:0; left:0;
-	background: url('../images/system/keyboard.png') no-repeat;
-}
-
 
 
 
 /*-------------- SHEETS --------------*/
 
-#frame {
+.sheet {
 	width: 100%;
 	height: 100%;
-	position: absolute;
-	top: 40px; left: 0;
-	overflow: scroll;
-	-webkit-overflow-scrolling: touch;
-	z-index: -20;
-}
-
-.sheet {
 	position: absolute;
 	top: 0; left: 0;
-	width: 100%;
-	height: 100%;
-	background: black;
-	/*position: absolute;
-	top: 40px; left: 0;
-	overflow: scroll;*/
-	color: yellow;
+	overflow: scroll;
+	-webkit-overflow-scrolling: touch;
+	opacity: 1;
+	background-color: white;
+	color: black;
 	font-size: 3em;
 	text-align: left;
-	opacity: .5;
+	-webkit-box-shadow: -15px 0px 0px rgba(50, 50, 50, 0.5);
 }
 
 .inactive_sheet {
@@ -184,11 +429,13 @@ html {
 
 .active_sheet {
 	z-index: 20;
+	//-webkit-box-shadow: 0px 0px 25px rgba(50, 50, 50, 0.75);
 }
 
-#home {
+#home_0 {
 
-	padding-top: 30px;
+	background-color: gray;
+	padding-top: 30px;	
 
 	.app-icon {
 		float: left;
@@ -207,6 +454,36 @@ html {
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -300,6 +577,19 @@ html {
 	100% { height: 80px; }
 }
 
+.openRBTitle {
+	-webkit-animation-name: openRBTitle;
+}
+@-webkit-keyframes openRBTitle {
+	0% { 
+	}
+	100% { 
+		font-size: 2em;
+		color: white;
+		background-color: rgba(255, 255, 255, .3);
+		top: 20px;
+	}
+}
 
 .closeFullRocketBar {
 	-webkit-animation-name: closeFullRocketBar;
@@ -323,29 +613,141 @@ html {
 }
 
 
-.openHome {
-	-webkit-animation-name: openHome;
+
+
+
+
+/*-------------- SHEET TRANSITIONS --------------*/
+
+
+// SlideInfromRight
+// SlideOuttoRight
+// SlideInfromLeft
+// SlideOuttoLeft
+
+
+.SlideInfromRight {
+	-webkit-animation-name: SlideInfromRight;
 }
-@-webkit-keyframes openHome {
-	0% { -webkit-transform: translateY(960px); }
-	100% { -webkit-transform: translateY(0px); }
+@-webkit-keyframes SlideInfromRight {
+	0% { -webkit-transform: translateX($right-edge); }
+	100% { -webkit-transform: translateX($left-edge); }
+}
+
+.SlideOuttoRight {
+	-webkit-animation-name: SlideInfromRight;
+}
+@-webkit-keyframes SlideInfromRight {
+	0% { -webkit-transform: translateX($left-edge); }
+	100% { -webkit-transform: translateX($right-edge); }
+}
+
+.SlideInfromLeft {
+	-webkit-animation-name: SlideInfromRight;
+}
+@-webkit-keyframes SlideInfromRight {
+	0% { -webkit-transform: translateX($right-edge); }
+	100% { -webkit-transform: translateX(-100%); }
+}
+
+.SlideOuttoLeft {
+	-webkit-animation-name: SlideInfromRight;
+}
+@-webkit-keyframes SlideInfromRight {
+	0% { -webkit-transform: translateX($left-edge); }
+	100% { -webkit-transform: translateX(-100%); }
 }
 
 
-.openSheet {
-	-webkit-animation-name: openSheet;
+
+
+
+// PushtoBackground
+// PushfromBackground
+// PushtoForeground
+// PushfromForeground
+
+.PushtoBackground {
+	-webkit-animation-name: PushtoBackground;
 }
-@-webkit-keyframes openSheet {
-	0% { -webkit-transform: translateX(640px); }
-	100% { -webkit-transform: translateX(0px); }
+@-webkit-keyframes PushtoBackground {
+	0% {
+		opacity: 1;
+		-webkit-transform: translateZ($normal-depth);
+	}
+	100% { 
+		opacity: 0;
+		-webkit-transform: translateZ($background-depth); 
+	}
 }
 
-.closeSheet {
-	-webkit-animation-name: closeSheet;
+.PushfromBackground {
+	-webkit-animation-name: PushfromBackground;
 }
-@-webkit-keyframes closeSheet {
-	0% { -webkit-transform: translateX(0px); }
-	100% { -webkit-transform: translateX(-640px); }
+@-webkit-keyframes PushfromBackground {
+	0% {
+		opacity: 0;
+		-webkit-transform: translateZ($background-depth);
+	}
+	100% { 
+		opacity: 1;
+		-webkit-transform: translateZ($normal-depth); 
+	}
 }
+
+.PushtoForeground {
+	-webkit-animation-name: PushtoForeground;
+}
+@-webkit-keyframes PushtoForeground {
+	0% {
+		opacity: 1;
+		-webkit-transform: translateZ($normal-depth);
+	}
+	100% { 
+		opacity: 0;
+		-webkit-transform: translateZ($foreground-depth); 
+	}
+}
+
+.PushfromForeground {
+	-webkit-animation-name: PushfromForeground;
+}
+@-webkit-keyframes PushfromForeground {
+	0% {
+		opacity: 0;
+		-webkit-transform: translateZ($foreground-depth);
+	}
+	100% { 
+		opacity: 1;
+		-webkit-transform: translateZ($normal-depth); 
+	}
+}
+
+.PushtoTaskManager {
+	-webkit-animation-name: PushtoTaskManager;
+}
+@-webkit-keyframes PushtoTaskManager {
+	0% {
+		opacity: 1;
+		-webkit-transform: translateZ($normal-depth);
+	}
+	100% { 
+		-webkit-transform: translateZ($taskmanager-depth); 
+	}
+}
+
+.PushfromTaskManager {
+	-webkit-animation-name: PushfromTaskManager;
+}
+@-webkit-keyframes PushfromTaskManager {
+	0% {
+		opacity: 1;
+		-webkit-transform: translateZ($taskmanager-depth);
+	}
+	100% { 
+		-webkit-transform: translateZ($normal-depth); 
+	}
+}
+
 
 

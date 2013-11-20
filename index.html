@@ -9,7 +9,6 @@
         <script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>
         <script type="text/javascript" src="js/animo.js"></script>
         <script type="text/javascript" src="js/pubsubz.js"></script>
-        <!--<script type="application/json" src="js/preloads.json"></script>-->
 
         <link rel="stylesheet" type="text/css" href="css/animate+animo.css">
         <link rel="stylesheet" type="text/css" href="css/normalize.css">
@@ -19,22 +18,70 @@
     <body>
 
         <div id="screen">
-            <div id="status-bar"></div>
-            <div id="bottom-swipe"></div>           
-            <div id="topleft-swipe"></div>
-            <div id="topright-swipe"></div>
-            <div id="frame">
-                <!-- <div id="home"></div> -->
+            
+            <!-- CORE ELEMENTS -->
+            <div id="rocket-bar">
+                <div id="title">null</div>
+                <div class="line"></div>
+                <div id="cancel">Cancel</div>
+                <div class="icon"></div>
             </div>
+            <div id="frame"></div>
+            <div id="notifications-bar">–&nbsp;&nbsp;&nbsp;–&nbsp;&nbsp;&nbsp;–&nbsp;&nbsp;&nbsp;–&nbsp;&nbsp;&nbsp;–</div>
+            
+            <!-- CHROME -->
+            <div id="notifications-drawer">
+                <ul>
+                    <li>
+                        <div class="time">Now</div>
+                        <img class="icon" src="images/icons/icon_messages.png" width="60px" height="60px" />
+                        <div class="tag">Rebecca</div>
+                        <div class="body">Hey! We’re going to buttes chaumont in the 19th at 15h30 if you feel like joining a few english speakers in the park! :)</div>
+                    </li>
+                    <li>
+                        <div class="time">15m ago</div>
+                        <img class="icon" src="images/icons/icon_messages.png" width="60px" height="60px" />
+                        <div class="tag">Ali Jones</div>
+                        <div class="body">Want to grab some sushi this evening?</div>
+                    </li>
+                    <li>
+                        <div class="time">32m ago</div>
+                        <img class="icon" src="images/icons/icon_calendar.png" width="60px" height="60px" />
+                        <div class="tag">Bi-weekly call w/ Eric</div>
+                        <div class="body">SFO Vidyo 7B</div>
+                    </li>
+                    <li>
+                        <div class="time">2 hr ago</div>
+                        <img class="icon" src="images/icons/icon_email.png" width="60px" height="60px" />
+                        <div class="tag">10 new emails</div>
+                        <div class="body">From jcarpenter, jachen and others</div>
+                    </li>
+                    <li>
+                        <div class="time">4 hr ago</div>
+                        <img class="icon" src="images/icons/icon_messages.png" width="60px" height="60px" />
+                        <div class="tag">Frank Yan</div>
+                        <div class="body">Thank you for subscribing to Cat Facts. Did you know that cats always land on their feet? Text IHATECATS for more cat facts!</div>
+                    </li>
+                </ul>
+
+            </div>
+            <div id="keyboard"></div>
+            <!-- <div id="bottom"></div>            -->
+            <div id="topleft"></div>
+            <div id="topmiddle"></div>
+            <div id="topright"></div>
+            
+
+
             <div id="settings-drawer">
-                <img src="images/system/settingsDrawer.png"/>
+                <img src="images/system/settingsDrawer.png" width="640" height="778" />
             </div>
+
             <div id="rocketbar-drawer">
                 <div id="background"></div>
                 <div id="cursor"></div>
-                <div id="keyboard"></div>
-                
             </div>
+
         </div>
 
 
@@ -51,7 +98,7 @@
         <!-- Sheet -->
         <script id="Sheet" type="text/x-handlebars-template">
             <div id="{{id}}_{{number}}" class="sheet">
-                <h1>{{name}}</h1>
+                
             </div>
         </script>
 
