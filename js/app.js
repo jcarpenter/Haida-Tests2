@@ -69,9 +69,9 @@ App.createNS = function (namespace) {
 
 /*-------------------- TOUCH TARGETS --------------------*/
 
-App.createNS("TouchTargets")
+App.createNS("Touch")
 
-App.TouchTargets = function(){
+App.Touch = function(){
 
   /*---- variables ---- */
 
@@ -86,6 +86,37 @@ App.TouchTargets = function(){
     topleft.classList.toggle("display_none");
     topmiddle.classList.toggle("display_none");
     topright.classList.toggle("display_none");
+  }
+
+  var touch = function (start_x,y,vector) {
+
+    var start_x = x;
+    var start_y = y;
+    var end_x;
+    var end_y;
+    var distance = 200;
+
+    if (vector == "up") {
+      end_y = start_y - distance;
+
+    } else if (vector == "right") {
+      end_x = start_x + distance;
+
+    } else if (vector == "down") {
+      end_y = start_y + distance;
+
+    } else if (vector == "left") {
+      end_x = start_x - distance;
+    
+    } else if (vector == "") {
+      end_y = start_y;
+      end_x = start_x;
+    }
+
+    //add object to state
+    //animate from start to end
+    //callback function, remove from stage
+
   }
 
   /*---- return ---- */
@@ -117,7 +148,7 @@ App.RocketBar = function() {
 
   /*---- interactions ---- */
 
-  App.TouchTargets.topleft.addEventListener("click", function() {
+  App.Touch.topleft.addEventListener("click", function() {
     pubsubz.publish('focus_rb');
   });
 
@@ -132,18 +163,18 @@ App.RocketBar = function() {
   }
 
   var show_rb = function () {
-    App.TouchTargets.toggle_targets();
+    App.Touch.toggle_targets();
     rocket_bar.classList.add("show");
   }
 
   var focus_rb = function() {
-    App.TouchTargets.toggle_targets();
+    App.Touch.toggle_targets();
     pubsubz.publish("open_keyboard");
     rocket_bar.classList.add("focus");
   }
 
   var close_rb = function() {
-    App.TouchTargets.toggle_targets();
+    App.Touch.toggle_targets();
     pubsubz.publish("close_keyboard");
     rocket_bar.classList.remove("show");
     rocket_bar.classList.remove("focus");
@@ -251,7 +282,7 @@ App.SettingsDrawer = function() {
 
   /*---- interactions ---- */
 
-  App.TouchTargets.topright.addEventListener("click", function() {
+  App.Touch.topright.addEventListener("click", function() {
     pubsubz.publish("open_settingsdrawer");
   })
 
